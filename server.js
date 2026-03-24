@@ -17,7 +17,11 @@ mongoose.connect(process.env.MONGO_URI, {
 const studentSchema = new mongoose.Schema({}, { strict: false });
 const Student = mongoose.model("Student", studentSchema);
 
-// Routes
+// Root route
+app.get("/", (req, res) => {
+  res.send("✅ Student API is running. Use /students to view data.");
+});
+
 // Get all students
 app.get("/students", async (req, res) => {
   const students = await Student.find();
@@ -26,7 +30,7 @@ app.get("/students", async (req, res) => {
 
 // Add new student
 app.post("/students", async (req, res) => {
-  const student = new Student(req.body);   // ✅ fixed initializer
+  const student = new Student(req.body);
   await student.save();
   res.json(student);
 });
