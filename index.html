@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student List App</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #f4f4f4; }
+    input, button { margin: 5px; padding: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Student List</h1>
+
+  <form id="studentForm">
+    <input type="text" id="name" placeholder="Name" required>
+    <input type="number" id="age" placeholder="Age" required>
+    <input type="text" id="course" placeholder="Course" required>
+    <button type="submit">Add Student</button>
+  </form>
+
+  <table id="studentsTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Course</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const API_URL = "https://student-app.onrender.com/students"; // replace with your Render URL
+
+    async function loadStudents() {
+      const res = await fetch(API_URL);
+      const students = await res.json();
+      const tbody = document.querySelector("#studentsTable tbody");
+      tbody.innerHTML = "";
+      students.forEach(s => {
+        const row = `<tr><td>${s.name}</td><td>${s.age}</td><td>${s.course}</td></tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    document.getElementById("studentForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const age = document.getElementById("age").value;
+      const course = document.getElementById("course").value;
+
+      await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, age, course })
+      });
+
+      document.getElementById("studentForm").reset();
+      loadStudents();
+    });
+
+    // Load students on page start
+    loadStudents();
+  </script>
+</body>
+</html>
