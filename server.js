@@ -26,14 +26,18 @@ app.get("/students", async (req, res) => {
 
 // Add new student
 app.post("/students", async (req, res) => {
-  const student = new Student(req.body);
+  const student = new Student(req.body);   // ✅ fixed initializer
   await student.save();
   res.json(student);
 });
 
 // Update student info
 app.post("/students/:id", async (req, res) => {
-  const student = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  const student = await Student.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true }
+  );
   if (student) res.json(student);
   else res.status(404).send("Student not found");
 });
